@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+  title="StoneridgePTC Test Gadget" 
+  description="Test Gadget for stonerigePTC."
+  title_url="http://stoneridgeptc.com" 
+  
+  author="Edward Raigosa" 
+  author_email="edward.raigosa@gmail.com"/> 
+<Content type="html"><![CDATA[
+Test Gadget
+]]></Content>
+</Module>
