@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+ <ModulePrefs 
+  title="StoneridgePTC Test Gadget" 
+  description="Test Gadget for stonerigePTC."
+  title_url="http://stoneridgeptc.com" 
+  
+  author="Edward Raigosa" 
+  author_email="edward.raigosa@hp.com"/> 
+ 
+
+<Content type="html"><![CDATA[
+  <div id="content_div" style="font-size:20pt; padding:5px; text-align: center;"></div>
+  <div id="debug_div" style="font-size:9pt; padding:5px; color: red;"></div>
+
+    <script type="text/javascript">
+      // Get userprefs
+      var prefs = new gadgets.Prefs();
+
+      // debug flag. When its value is non-zero, debugging messages are displayed      
+      var debug = 1;
+      // The string containing debugging messages
+      var debug_html = "";
+
+      // functions from simplmentor
+	function getRecentAnnouncements()
+	{
+		  print("calling test_getRecentAnnouncements");
+		  var site = SitesApp.getSite('site', 'raigosafamily');
+		 
+		  if(!site)
+		  {    
+		    return;
+		  }
+	  
+		  //you can configure this number however you want
+		  var theNumberOfAnnouncementsYouWant = 5;
+		  var announcementPage = site.getChildByName('announcements');
+	  
+	  	  var recentAnnouncements = getRecentAnnouncements(theNumberOfAnnouncementsYouWant ,announcementPage);
+	  
+	      var content_html = "";     
+          var element = document.getElementById('content_div');
+          element.style.backgroundColor=prefs.getString("mycolor");
+          element.style.height=100;
+        
+		  for(var i in recentAnnouncements)
+		  {
+		    var announcement =  recentAnnouncements[i];
+		    content_html += announcement.getTitle() + " || " + announcement.getUrl() + " || " + announcement.getDatePublished();
+		  }
+		  // Write content HTML to div
+          document.getElementById("content_div").innerHTML = content_html;    
+	}
+
+	function getRecentAnnouncements(count, page) 
+	{  
+	  
+	  //not sure if there is a limit in the getAnnouncements() function, but I'm dealing with less than 500 posts right now
+	  var allAnnouncements = page.getAnnouncements({max:500});
+	  var sortedSet = allAnnouncements.sort(announcement_sort_desc);
+	  return sortedSet.slice(0,count);
+	}
+
+	var announcement_sort_asc = function (announcement1, announcement2) {
+	  var date1 = announcement1.getDatePublished();
+	  var date2 = announcement2.getDatePublished();
+	  if (date1 > date2) return 1;
+	  if (date1 < date2) return -1;
+	  return 0;
+	};
+
+      // Display date
+      function displayDate (){      
+        // DEBUG: is the function getting called?
+        print("In displayDate function 2<br>");
+          
+        // Create Date object
+        var today = new Date();
+        // Get current time
+        var time = today.getTime();
+        var content_html = "";     
+        var element = document.getElementById('content_div');
+        element.style.backgroundColor=prefs.getString("mycolor");
+        element.style.height=100;
+
+        // DEBUG: print out prefs values
+        print("The background color is " + prefs.getString("mycolor") + "<br>");
+        print("The name is " + prefs.getString("myname") + "<br>");
+      
+        content_html += today.toDateString();
+        // Write content HTML to div
+        document.getElementById("content_div").innerHTML = content_html;    
+      } 
+  
+      // Outputs debug messages if debug flag has a non-zero value
+      function print(msg) {      
+        if (debug) {
+          debug_html += msg;
+          // Write debug HTML to div
+          document.getElementById("debug_div").innerHTML = debug_html;
+        }
+      }
+     // gadgets.util.registerOnLoadHandler(displayDate);
+      gadgets.util.registerOnLoadHandler(getRecentAnnouncements);
+    </script>
+]]></Content>
+</Module>
+​
