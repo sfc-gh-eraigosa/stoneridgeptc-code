@@ -10,9 +10,11 @@
  
 
 <Content type="html"><![CDATA[
+<!--
   <div id="content_div" style="font-size:20pt; padding:5px; text-align: center;">content</div>
   <div id="debug_div" style="font-size:9pt; padding:5px; color: red;">debug</div>
-
+-->
+test
 ]]></Content>
 </Module>
 ​
