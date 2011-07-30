@@ -1,20 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
- <ModulePrefs 
-  title="StoneridgePTC Test Gadget" 
-  description="Test Gadget for stonerigePTC."
-  title_url="http://stoneridgeptc.com" 
-  
-  author="Edward Raigosa" 
-  author_email="edward.raigosa@hp.com"/> 
- 
-
+<ModulePrefs title="hello world example" />
 <Content type="html"><![CDATA[
-<!--
-  <div id="content_div" style="font-size:20pt; padding:5px; text-align: center;">content</div>
-  <div id="debug_div" style="font-size:9pt; padding:5px; color: red;">debug</div>
--->
-test
+Hello, world!
 ]]></Content>
 </Module>
 ​
