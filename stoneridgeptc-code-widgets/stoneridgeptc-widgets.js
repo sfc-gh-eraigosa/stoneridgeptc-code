@@ -14,9 +14,40 @@
       function mainLoader()
       {
       	printdebug("mainLoader executed");
+      	getRecentAnnouncementsBuilder();
       }
       
-      
+      // functions from simplmentor
+	  function getRecentAnnouncementsBuilder()
+	  {
+		    printdebug("calling getRecentAnnouncements");
+			var site = SitesApp.getSite('site', 'raigosafamily');
+				 
+			if(!site)
+			{    
+			    return;
+			}
+					  
+			//you can configure this number however you want
+			var theNumberOfAnnouncementsYouWant = 5;
+			var announcementPage = site.getChildByName('announcements');
+			  
+			var recentAnnouncements = getRecentAnnouncements(theNumberOfAnnouncementsYouWant ,announcementPage);
+			  
+			var content_html = "";     
+			var element = document.getElementById('content_div');
+			element.style.backgroundColor=prefs.getString("mycolor");
+			element.style.height=100;
+			  
+			for(var i in recentAnnouncements)
+			{
+				var announcement =  recentAnnouncements[i];
+				content_html += announcement.getTitle() + " || " + announcement.getUrl() + " || " + announcement.getDatePublished();
+			}
+			// Write content HTML to div
+			document.getElementById("content_div").innerHTML = content_html;    
+	  }
+
       // Outputs debug messages if debug flag has a non-zero value
       function printdebug(msg) {      
         if (debug) {
