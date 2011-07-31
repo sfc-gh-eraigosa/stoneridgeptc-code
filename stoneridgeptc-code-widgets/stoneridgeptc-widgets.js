@@ -26,5 +26,21 @@
         }
       }
       
-      
+      function getRecentAnnouncements(count, page) 
+  	  {  
+  	  
+	  	  //not sure if there is a limit in the getAnnouncements() function, but I'm dealing with less than 500 posts right now
+	  	  var allAnnouncements = page.getAnnouncements({max:500});
+	  	  var sortedSet = allAnnouncements.sort(announcement_sort_desc);
+	  	  return sortedSet.slice(0,count);
+  	  }
+
+  	var announcement_sort_asc = function (announcement1, announcement2) {
+  	  var date1 = announcement1.getDatePublished();
+  	  var date2 = announcement2.getDatePublished();
+  	  if (date1 > date2) return 1;
+  	  if (date1 < date2) return -1;
+  	  return 0;
+  	};
+  	
       gadgets.util.registerOnLoadHandler(mainLoader);
