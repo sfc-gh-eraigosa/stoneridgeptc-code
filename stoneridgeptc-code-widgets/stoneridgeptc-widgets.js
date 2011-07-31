@@ -1,4 +1,4 @@
- <script type="text/javascript">
+
       // this page is found on : http://stoneridgeptc-code.googlecode.com/svn/stoneridgeptc-code-widgets/stoneridgeptc-test5.xml
       // Get userprefs
       var prefs = new gadgets.Prefs();
@@ -28,4 +28,3 @@
       
       
       gadgets.util.registerOnLoadHandler(mainLoader);
-    </script>
