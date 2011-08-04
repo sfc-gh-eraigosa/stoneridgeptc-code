@@ -21,8 +21,16 @@
 	  function getRecentAnnouncementsBuilder()
 	  {
 		    printdebug("calling getRecentAnnouncements");
-			var site = SitesApp.getSite('site', 'raigosafamily');
-				 
+		    try
+		    {
+		    	var site = SitesApp.getSite('site', 'raigosafamily');
+		    }
+		    catch(Exception e)
+		    {
+		    	printdebug(e.getMessage());
+		    	return;
+		    }
+		    
 			if(!site)
 			{    
 			    return;

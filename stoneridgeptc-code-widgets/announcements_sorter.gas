@@ -1,0 +1,216 @@
+// GLOBALS
+var recentAnnouncements = null;
+var theNumberOfAnnouncementsYouWant = 5;
+var app = null;
+var component = null;
+/////////////////////////////////////////////
+
+
+// main function entry point.
+function doGet()
+{
+  app = UiApp.createApplication();
+  app.setTitle("My Help Dialog");
+  app.setHeight(480);
+  
+  var helptext = ""
+      + "This is a line.\n"
+      + "A blank line will follow this one.\n\n"
+      + "    This line will be indented.\n"
+      + "        This will be indented some more.\n"
+      ;
+  
+  Builder_getRecentAnnouncements();
+  var line = "\n-----------------------------------------------------------------------------------------\n";
+  if(recentAnnouncements != null)
+  {
+    for(var i in recentAnnouncements)
+    {
+      var announcement =  recentAnnouncements[i];
+      var annPanel = formatTextPanel(app,   announcement.getTitle() + "\n" + 
+                                          + "\t" + announcement.getContent() + "\n\n" 
+                                          + announcement.getDatePublished() + "\n\n"
+                                          + line,
+                                     announcement.getUrl());
+      app.add(annPanel);
+      Logger.log(announcement.getTitle() + " || " + announcement.getUrl() + " || " + announcement.getDatePublished())
+    }
+  }
+  
+  //var helpPanel = formatTextPanel(app,helptext);
+  
+  //app.add(helpPanel);
+  
+  return app;
+}
+
+function doGet2()
+{
+//  Logger.log("Test");
+  var app = UiApp.createApplication();
+  var panel = app.createVerticalPanel().setId("panel")
+                                       .setSize("200", "600")
+                                       .setTitle("Test Panel");
+  var button = app.createButton().setId("test").setSize("100%", "50").setText("test button");
+  
+  var richtxt = app.createRichTextArea().setId("rtxt").setText("\bblah\nblah");
+  
+  var anchor = app.createAnchor("<b>blah</b>", "javscript.open()");
+  
+  var label = app.createLabel("<b>label</b> test\nblah blah");
+  
+  var captionpanel = app.createCaptionPanel().setContentWidget(richtxt);
+  
+  var grid = app.createGrid().resize(3, 4).setWidget(2, 3, button);
+  grid.setWidget(0, 0, captionpanel);
+  grid.setWidget(0, 1, anchor);
+  grid.setWidget(1, 0, label);
+  
+  panel.add(grid);
+  
+  app.add(panel);
+  return app;
+}
+
+
+/**
+ * Returns a widget formatted with the text.
+ */
+function formatTextPanel(a, text, href) {
+  var app = a ;
+  var panel = app.createVerticalPanel();
+  
+  var lines = text.split("\n");
+  
+  for (var i=0; i<lines.length; i++) {
+    var cleaned = removeLeadingWhiteSpace(lines[i]);
+    
+    if(i == 0)
+    {
+      var label = app.createAnchor(cleaned[1], href);
+      if (cleaned[1].length == 0) {
+        label.setText("-");
+        label.setStyleAttribute("visibility", "hidden");
+      }
+      if (cleaned[0] > 0) {
+        var margin = cleaned[0] * 6; // 6 px per char
+      label.setStyleAttribute("margin", "0px 0px 0px "+margin+"px");
+      }
+    }
+    else
+    {
+      var label = app.createLabel(cleaned[1]);
+      if (cleaned[1].length == 0) {
+        label.setText("-");
+        label.setStyleAttribute("visibility", "hidden");
+      }
+      if (cleaned[0] > 0) {
+        var margin = cleaned[0] * 6; // 6 px per char
+      label.setStyleAttribute("margin", "0px 0px 0px "+margin+"px");
+      }
+    }
+    panel.add(label);
+  }
+  return panel;
+}
+
+/**
+ * Remove whitespaces from start and report how many.
+ */
+function removeLeadingWhiteSpace(text) {
+  var i = 0;
+  var res = [];
+  while (i < text.length && text[i] == ' ') {
+    i = i+1;
+  }
+  res[0] = i;
+  res[1] = text.substr(i);
+  return res;
+}
+
+// create the app
+function CreateUIBuilderApp()
+{
+  app = UiApp.createApplication();
+  component = app.loadComponent("AnnouncementsGUI");
+  app.add(component);
+}
+
+
+
+function uiSetup(oComponent, oApp)
+{
+  /*
+  var otxtDesc = null;
+  otxtDesc = oApp.createRichTextArea();
+  otxtDesc.setID("TextDesc1");
+  otxtDesc.setStyleAttribute("Left", "9");
+  otxtDesc.setStyleAttribute("Top","334");
+  otxtDesc.setSize("528","102");
+ 
+  oComponent.add(otxtDesc);
+  */
+                 
+}
+
+
+
+// build the anouncements
+function Builder_getRecentAnnouncements(){
+  var sites = SitesApp.getSites();
+  var oSite = null;
+  for(site in sites)
+  {
+    var oTempSite = sites[site];
+    var sitename=oTempSite.getName();
+    if(sitename.equals('raigosafamily'))
+    {
+       oSite = oTempSite;
+       break;
+    }
+    
+  }
+  
+  if(oSite == null){    
+    return;
+  }
+  
+  
+  //you can configure this number however you want
+  
+  var announcementPage = oSite.getChildByName('announcments');
+  if(announcementPage != null)
+  {
+     recentAnnouncements = getRecentAnnouncements(theNumberOfAnnouncementsYouWant ,announcementPage);
+    
+   
+    
+    for(var i in recentAnnouncements){
+      var announcement =  recentAnnouncements[i];
+      Logger.log(announcement.getTitle() + " || " + announcement.getUrl() + " || " + announcement.getDatePublished())
+      }
+
+  }
+}
+
+// sort the announcements
+function sort_asc (announcement1, announcement2)
+{
+  var date1 = announcement1.getDatePublished();
+  var date2 = announcement2.getDatePublished();
+  if (date1 > date2) return 1;
+  if (date1 < date2) return -1;
+  return 0;
+}
+
+
+// get the anounemencts sorted.
+function getRecentAnnouncements(count, page) {  
+  
+  //not sure if there is a limit in the getAnnouncements() function, but I'm dealing with less than 500 posts right now
+  var allAnnouncements = page.getAnnouncements({max:500});
+  var sortedSet = allAnnouncements.sort(sort_asc);
+  
+  return sortedSet.slice(0,count);
+}
+
