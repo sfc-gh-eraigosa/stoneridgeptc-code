@@ -1,0 +1,1 @@
+Stoneridge Elementary is located is Roseville CA, and is our son's and daughters Elementary school.  We assist with stoneridgeptc.com and volunteer with Online presence needed for our schools site.  You will find code on this project that is specifically designed to help our schools PTC site.
